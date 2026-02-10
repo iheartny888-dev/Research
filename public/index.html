@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phonological Naturalness Survey</title>
+    <title>Survey</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <!-- Consent Screen -->
         <div id="consentScreen" class="screen active">
             <div class="consent-form">
-                <h1>Research Study Participation</h1>
+                <h1>Research Survey</h1>
                 <p class="subtitle">Evaluating the Impact of Phonological Changes on Perceived Linguistic Naturalness</p>
                 
                 <div class="form-group">
@@ -44,7 +43,6 @@
             </div>
         </div>
 
-        <!-- Survey Screen -->
         <div id="surveyScreen" class="screen">
             <div class="survey-progress">
                 <div class="progress-bar">
@@ -96,7 +94,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="rationale">Please briefly explain your choice (optional):</label>
+                        <label for="rationale">Please briefly explain your choice:</label>
                         <textarea id="rationale" placeholder="What features made you choose the text you selected?" rows="4"></textarea>
                     </div>
 
@@ -105,18 +103,14 @@
             </div>
         </div>
 
-        <!-- Completion Screen -->
         <div id="completionScreen" class="screen">
             <div class="completion-content">
                 <h1>Thank You!</h1>
-                <p class="subtitle">Your responses have been recorded successfully.</p>
-                <p>Your contribution to this research on phonological naturalness is greatly appreciated. Your responses will help us better understand how people perceive language patterns across different linguistic systems.</p>
-                <p class="info-text">Responses have been saved and will be analyzed along with other participants' data for this study.</p>
+                <p class="subtitle">Your responses have been recorded successfully. Thank you for your participation. You are free to close this tab.</p>
                 <button id="restartBtn" class="btn btn-primary">Start Over</button>
             </div>
         </div>
 
-        <!-- Error Screen -->
         <div id="errorScreen" class="screen">
             <div class="error-content">
                 <h1>Error</h1>
