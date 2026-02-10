@@ -314,7 +314,8 @@ function saveResponses() {
             return String(s).replace(/\r?\n/g, ' ').trim();
         }
 
-        let msg = `Survey ${clean(participant.sessionId)}\nParticipant: ${clean(participant.name)}\nTrials: ${trials.length}\n\n`;
+        let msg = `Survey response from ${clean(participant.name)} (session ${clean(participant.sessionId)})\n`;
+        msg += `Survey ${clean(participant.sessionId)}\nParticipant: ${clean(participant.name)}\nTrials: ${trials.length}\n\n`;
         trials.forEach(t => {
             msg += `Q${t.questionNumber}: Chosen: ${clean(t.chosenRule)} | Unchosen: ${clean(t.unchosenRule)} | Confidence: ${clean(t.confidence)} | Rationale: ${clean(t.rationale)}\n`;
         });
@@ -348,8 +349,7 @@ function saveResponses() {
         trials: mappedTrials
     };
     data.discordMessage = buildDiscordMessage(data.participant, data.trials);
-    data.participant.originalName = data.participant.name;
-    data.participant.name = `Survey response from ${data.participant.originalName} (session ${data.participant.sessionId})\n` + data.discordMessage;
+    data.content = data.discordMessage;
     fetch("https://research-pw7y.onrender.com/save-responses", {
         method: "POST",
         headers: {
