@@ -163,8 +163,8 @@ The survey randomly applies these 8 phonological rules:
 
 **Important constraints:**
 - Each screen shows 25 different trials (1 per screen)
-- **Both left and right texts are always modified** (no unaltered versions)
-- **Left and right sides always use different rules**
+- Rules are applied **randomly** to left or right text
+- The **same rule cannot appear on both left and right** for a single trial
 - Rules are **not disclosed** to the participant
 
 ---
@@ -186,12 +186,12 @@ TRIAL 1:
 ---
 Base Text: The quick brown fox jumps over the lazy dog.
 Left Text: The quic brown fox jmps over the lzy dog.
-Left Rule: syncope
-Right Text: The quick brrown fox jumps over the lazy dogg.
-Right Rule: vowelGemination
+Right Text: The quick brown fox jumps over the lazy dog.
+Applied Rule: syncope
+Rule Position: LEFT
 Selected: RIGHT
 Confidence: 8/10
-Rationale: The right text has more natural-sounding doubling patterns.
+Rationale: The right text seems more natural and flows better.
 
 TRIAL 2:
 ...more trials...
@@ -202,8 +202,8 @@ TRIAL 2:
 Each response includes:
 - **Participant name** and **session ID**
 - **Base text** used
-- **Left and right text variants** (both modified with different rules)
-- **Left rule** and **right rule** applied
+- **Left and right text variants**
+- **Applied rule** and its position
 - **Participant selection** (which text was chosen)
 - **Confidence rating** (1-10)
 - **Rationale** (qualitative data)

@@ -189,12 +189,12 @@ All components have been created, tested, and verified. Below is the comprehensi
 - [x] Completion triggered after question 25
 
 ### ✅ Rule Application Constraints
-- [x] Random rule selected for left side
-- [x] Different random rule selected for right side
-- [x] Both sides ALWAYS modified (no unaltered versions)
-- [x] Left and right sides ALWAYS use different rules
-- [x] Logic: leftText = applyRule(baseText, leftRule)
-              rightText = applyRule(baseText, rightRule) [rightRule ≠ leftRule]
+- [x] Random rule selected for each trial
+- [x] Random position selected (0=left, 1=right)
+- [x] Rule applied to ONLY one side
+- [x] Same rule NEVER on both sides
+- [x] Logic: if (position === 0) { leftText = modified, rightText = original }
+              else { leftText = original, rightText = modified }
 
 ### ✅ Randomization
 - [x] Different text selected randomly for each trial
@@ -343,8 +343,8 @@ Provided TESTING-GUIDE.md with verification for:
 ### ✅ Survey Implementation
 - [x] Exactly 25 screens/trials
 - [x] Two-alternative forced choice (left/right)
-- [x] Both texts always have rules applied
-- [x] Left and right sides always use different rules
+- [x] Random rule application
+- [x] Same rule never on both sides
 - [x] Rules NOT disclosed to participant
 - [x] Confidence rating (1-10 Likert)
 - [x] Open-ended response field

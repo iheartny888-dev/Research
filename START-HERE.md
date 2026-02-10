@@ -146,7 +146,7 @@ getRuleNames()
 ✓ **Exactly 25 questions** - Always 25, never more or less  
 ✓ **8 phonological rules** - Lenition, Fortition, Epenthesis, Syncope, Coda Deletion, Nasal Assimilation, Consonant Gemination, Vowel Gemination  
 ✓ **Randomized trials** - Different order every time  
-✓ **Both texts modified** - No unaltered versions, each side uses a different rule  
+✓ **Constraint enforced** - Same rule NEVER on both left and right  
 ✓ **Rules hidden** - Participants don't know which rule was applied  
 ✓ **Confidence ratings** - 1-10 Likert scale  
 ✓ **Open responses** - Optional explanation field  

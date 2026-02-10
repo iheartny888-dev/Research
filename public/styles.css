@@ -6,13 +6,13 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #ffa0ef 0%, #973250 100%);
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    color: #333;
+    color: #000;
 }
 
 .container {
@@ -37,14 +37,13 @@ body {
     opacity: 1;
 }
 
-/* Consent Form Styles */
 .consent-form {
     max-width: 800px;
     margin: 0 auto;
 }
 
 .consent-form h1 {
-    color: #973250;
+    color: #1f2937;
     margin-bottom: 10px;
     font-size: 28px;
 }
@@ -81,7 +80,7 @@ body {
 .form-group input[type="text"]:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #973250;
+    border-color: #667eea;
     background-color: #f8f9ff;
 }
 
@@ -98,15 +97,15 @@ body {
 }
 
 .consent-info {
-    background-color: #f0f4ff;
+    background-color: #dbeafe;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 25px;
-    border-left: 4px solid #973250;
+    border-left: 4px solid #3b82f6;
 }
 
 .consent-info h3 {
-    color: #973250;
+    color: #3b82f6;
     margin-bottom: 15px;
     font-size: 18px;
 }
@@ -123,7 +122,6 @@ body {
     margin-bottom: 10px;
 }
 
-/* Survey Screen Styles */
 .survey-progress {
     margin-bottom: 30px;
 }
@@ -139,7 +137,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(to right, #973250, rgb(228, 141, 202));
+    background: linear-gradient(to right, #3b82f6, #1f2937);
     transition: width 0.3s ease;
     width: 0%;
 }
@@ -156,7 +154,7 @@ body {
 }
 
 .question-number {
-    color: #973250;
+    color: #1f2937;
     font-weight: 600;
     margin-bottom: 15px;
     font-size: 14px;
@@ -199,14 +197,14 @@ body {
 }
 
 .text-box:hover {
-    border-color: #973250;
-    background-color: #f0f4ff;
+    border-color: #3b82f6;
+    background-color: #dbeafe;
 }
 
 .text-box.selected {
-    border-color: #973250;
-    background-color: #e8ecff;
-    box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+    border-color: #3b82f6;
+    background-color: #bfdbfe;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
 
 .text-content {
@@ -236,7 +234,6 @@ body {
     max-width: 200px;
 }
 
-/* Likert Scale Styles */
 .likert-scale {
     background-color: #f8f9fa;
     padding: 20px;
@@ -245,7 +242,7 @@ body {
 }
 
 .scale-label {
-    font-size: 10px;
+    font-size: 12px;
     color: #666;
     text-align: center;
     margin-bottom: 10px;
@@ -274,21 +271,20 @@ body {
 }
 
 .scale-btn:hover {
-    border-color: #973250;
-    color: #973250;
+    border-color: #3b82f6;
+    color: #3b82f6;
 }
 
 .scale-btn.selected {
-    background-color: #973250;
+    background-color: #1f2937;
     color: white;
-    border-color: #973250;
+    border-color: #1f2937;
 }
 
 .scale-label:last-of-type {
     margin-bottom: 0;
 }
 
-/* Button Styles */
 .btn {
     padding: 12px 30px;
     border: none;
@@ -300,13 +296,13 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #973250 0%, #c078c7 100%);
+    background: #1f2937;
     color: white;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 20px rgba(31, 41, 55, 0.4);
 }
 
 .btn-primary:active {
@@ -314,20 +310,20 @@ body {
 }
 
 .btn-text-selection {
-    background-color: #f0f4ff;
-    color: #973250;
+    background-color: #dbeafe;
+    color: #1f2937;
     border: 2px solid #ddd;
 }
 
 .btn-text-selection:hover {
-    background-color: #e8ecff;
-    border-color: #973250;
+    background-color: #bfdbfe;
+    border-color: #3b82f6;
 }
 
 .btn-text-selection.selected {
-    background-color: #973250;
+    background-color: #1f2937;
     color: white;
-    border-color: #973250;
+    border-color: #1f2937;
 }
 
 button:disabled {
@@ -335,7 +331,6 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* Completion & Error Screens */
 .completion-content,
 .error-content {
     text-align: center;
@@ -345,7 +340,7 @@ button:disabled {
 
 .completion-content h1,
 .error-content h1 {
-    color: #973250;
+    color: #1f2937;
     font-size: 36px;
     margin-bottom: 15px;
 }
@@ -359,10 +354,10 @@ button:disabled {
 }
 
 .info-text {
-    background-color: #f0f4ff;
+    background-color: #dbeafe;
     padding: 15px;
     border-radius: 8px;
-    color: #667eea;
+    color: #3b82f6;
     font-weight: 500;
     margin: 20px 0;
 }
@@ -375,12 +370,10 @@ button:disabled {
     color: #d32f2f;
 }
 
-/* Hidden Class */
 .hidden {
     display: none;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .screen {
         padding: 25px;

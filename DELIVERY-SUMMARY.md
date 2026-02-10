@@ -216,26 +216,26 @@ TIMESTAMP: 2024-02-09T12:34:56.789Z
 TRIAL 1:
 ---
 Base Text: The quick brown fox jumps over the lazy dog.
-Left Text: The quic brown fox jmps over the lzy dog.
-Left Rule: syncope
-Right Text: The quuick browwn foox jumps over the laazy dogg.
-Right Rule: vowelGemination
+Left Text: The quick brown fox jumps over the lazy dog.
+Right Text: The quic brow fo jump over the lzy do.
+Applied Rule: coda deletion
+Rule Position: RIGHT
 Selected: LEFT
 Confidence: 9/10
-Rationale: Vowel doubling makes it sound unnatural to my ear.
+Rationale: The left text sounds more natural and complete.
 
 TRIAL 2:
 ---
 Base Text: Beautiful mornings bring fresh perspectives to the world.
 Left Text: Beatiful mornings bring fresh perspectives to the world.
-Left Rule: syncope
-Right Text: Beatiful mmornings bbring fresh pperspectives tto the wworld.
-Right Rule: consonantGemination
+Right Text: Beautiful mornings bring fresh perspectives to the world.
+Applied Rule: syncope
+Rule Position: LEFT
 Selected: RIGHT
 Confidence: 7/10
-Rationale: The gemination pattern creates interesting stress patterns.
+Rationale: Removing letters makes it harder to understand.
 
-...23 more trials...
+...27 more trials...
 ```
 
 Perfect for analysis with mixed-effects regression!
@@ -256,8 +256,7 @@ Every feature has been implemented and verified:
 **Survey Questions**
 ✅ Exactly 25 questions
 ✅ Two texts per question
-✅ Both texts modified (no unaltered versions)
-✅ Each side uses a different rule
+✅ One original, one modified
 ✅ Progress bar and counter
 ✅ Selection buttons for both sides
 ✅ Confidence rating (1-10)

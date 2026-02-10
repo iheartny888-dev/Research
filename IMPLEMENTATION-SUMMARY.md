@@ -149,31 +149,30 @@ for (let i = 0; i < 25; i++) {
   textIndex = random(0, numTexts)
   baseText = texts[textIndex]
   
-  // Step 2: Select first rule (for left side)
-  leftRuleIndex = random(0, 8)  // 8 phonological rules available
-  leftRule = ruleNames[leftRuleIndex]
+  // Step 2: Select a rule
+  ruleIndex = random(0, 8)  // 8 phonological rules available
+  rule = ruleNames[ruleIndex]
   
-  // Step 3: Select second rule (for right side, must be different)
-  do {
-    rightRuleIndex = random(0, 8)
-  } while (rightRuleIndex === leftRuleIndex)  // Ensure different
-  rightRule = ruleNames[rightRuleIndex]
+  // Step 3: Pick which side gets the rule
+  position = random(0, 2)  // 0=left, 1=right
   
-  // Step 4: Apply both rules to both sides
-  // BOTH sides are modified - no unaltered versions
-  leftText = applyRule(baseText, leftRule)
-  rightText = applyRule(baseText, rightRule)
+  // Step 4: Apply rule to only ONE side
+  if (position === 0) {
+    leftText = applyRule(baseText, rule)
+    rightText = baseText  // UNMODIFIED
+  } else {
+    leftText = baseText  // UNMODIFIED
+    rightText = applyRule(baseText, rule)
+  }
   
-  // CONSTRAINT: Left and right ALWAYS use different rules
+  // CONSTRAINT: Same rule is NEVER on both sides
 }
 ```
 
 **This ensures:**
 - Exactly 25 trials per survey
-- Both texts are always modified (no unaltered versions)
-- Each trial has two different rules applied
-- Left and right sides always have different rules
-- Rule selection is unpredictable
+- Each trial has exactly one rule applied
+- Rule position is unpredictable
 - No pattern emerges from multiple trials
 
 ---

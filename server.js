@@ -4,29 +4,22 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve texts.txt as a static file from data folder
 app.use('/texts.txt', express.static(path.join(__dirname, 'data', 'texts.txt')));
 
-// Endpoint to save responses
 app.post('/save-responses', (req, res) => {
     try {
         const data = req.body;
         const responsesDir = path.join(__dirname, 'data');
         const responsesFile = path.join(responsesDir, 'responses.txt');
         
-        // Ensure data directory exists
         if (!fs.existsSync(responsesDir)) {
             fs.mkdirSync(responsesDir, { recursive: true });
         }
         
-        // Format the data for saving
         const responseEntry = formatResponseEntry(data);
-        
-        // Append to responses file
         fs.appendFileSync(responsesFile, responseEntry + '\n\n');
         
         console.log(`Responses saved for participant: ${data.participant.name}`);
@@ -45,7 +38,6 @@ app.post('/save-responses', (req, res) => {
     }
 });
 
-// Endpoint to check server status
 app.get('/status', (req, res) => {
     res.json({ 
         status: 'running',
@@ -53,14 +45,10 @@ app.get('/status', (req, res) => {
     });
 });
 
-// 404 handler
 app.use((req, res) => {
     res.status(404).json({ error: 'Endpoint not found' });
 });
 
-/**
- * Format response for saving to file
- */
 function formatResponseEntry(data) {
     const participant = data.participant;
     const trials = data.trials;
@@ -76,8 +64,8 @@ function formatResponseEntry(data) {
         output += `---\n`;
         output += `Base Text: ${trial.baseText}\n`;
         output += `Left Text: ${trial.leftText}\n`;
-        output += `Left Rule: ${trial.leftRule}\n`;
         output += `Right Text: ${trial.rightText}\n`;
+        output += `Left Rule: ${trial.leftRule}\n`;
         output += `Right Rule: ${trial.rightRule}\n`;
         output += `Selected: ${trial.selectedText === 'left' ? 'LEFT' : 'RIGHT'}\n`;
         output += `Confidence: ${trial.confidence}/10\n`;
@@ -90,7 +78,6 @@ function formatResponseEntry(data) {
     return output;
 }
 
-// Start server
 app.listen(PORT, () => {
     console.log(`Survey server running at http://localhost:${PORT}`);
     console.log('Serve the public folder or configure your live server to use this.');
