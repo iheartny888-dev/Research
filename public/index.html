@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phonological Naturalness Survey</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Consent Screen -->
+        <div id="consentScreen" class="screen active">
+            <div class="consent-form">
+                <h1>Research Study Participation</h1>
+                <p class="subtitle">Sounding it Out: Evaluating the Impact of Phonological Changes on Perceived Linguistic Naturalness</p>
+                
+                <div class="form-group">
+                    <label for="participantName">Please enter your name:</label>
+                    <input type="text" id="participantName" placeholder="Your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="englishAbility" required>
+                        I confirm that I can speak English fluently.
+                    </label>
+                </div>
+
+                <div class="consent-info">
+                    <h3>Study Information</h3>
+                    <p>This is a research study conducted to evaluate how phonological patterns contribute to perceived linguistic naturalness. You will be presented with pairs of text samples and asked to judge which seems more phonologically natural to you.</p>
+                    <p><strong>Your responses will be:</strong></p>
+                    <ul>
+                        <li>Anonymously recorded and used solely for this research</li>
+                        <li>Kept confidential and secure</li>
+                        <li>Used only for linguistic analysis purposes</li>
+                    </ul>
+                    <p>The survey will take approximately 15-20 minutes to complete.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="consentCheckbox" required>
+                        I consent to participate in this study and agree that my responses may be used in the research. I understand that my participation is voluntary and I can withdraw at any time.
+                    </label>
+                </div>
+
+                <button id="startSurveyBtn" class="btn btn-primary">Start Survey</button>
+            </div>
+        </div>
+
+        <!-- Survey Screen -->
+        <div id="surveyScreen" class="screen">
+            <div class="survey-progress">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p id="progressText">Question 1 of 25</p>
+            </div>
+
+            <div class="survey-content">
+                <div class="question-number">Screen <span id="currentQuestion">1</span> of 25</div>
+                
+                <h2>Which text seems more phonologically natural?</h2>
+                <p class="instructions">Select the text you perceive as more phonologically natural, even if you don't recognize the language.</p>
+
+                <div class="text-comparison">
+                    <div class="text-box" id="leftBox">
+                        <div class="text-content" id="leftText"></div>
+                    </div>
+                    <div class="separator">or</div>
+                    <div class="text-box right" id="rightBox">
+                        <div class="text-content" id="rightText"></div>
+                    </div>
+                </div>
+
+                <div class="selection-buttons">
+                    <button id="selectLeft" class="btn btn-text-selection">Select Left</button>
+                    <button id="selectRight" class="btn btn-text-selection">Select Right</button>
+                </div>
+
+                <div id="ratingSection" class="hidden">
+                    <div class="form-group">
+                        <label for="confidenceRating">How confident are you in this choice?</label>
+                        <div class="likert-scale">
+                            <div class="scale-label">Least Confident</div>
+                            <div class="scale-buttons">
+                                <button class="scale-btn" data-value="1">1</button>
+                                <button class="scale-btn" data-value="2">2</button>
+                                <button class="scale-btn" data-value="3">3</button>
+                                <button class="scale-btn" data-value="4">4</button>
+                                <button class="scale-btn" data-value="5">5</button>
+                                <button class="scale-btn" data-value="6">6</button>
+                                <button class="scale-btn" data-value="7">7</button>
+                                <button class="scale-btn" data-value="8">8</button>
+                                <button class="scale-btn" data-value="9">9</button>
+                                <button class="scale-btn" data-value="10">10</button>
+                            </div>
+                            <div class="scale-label">Most Confident</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rationale">Please briefly explain your choice (optional):</label>
+                        <textarea id="rationale" placeholder="What features made you choose the text you selected?" rows="4"></textarea>
+                    </div>
+
+                    <button id="nextBtn" class="btn btn-primary">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="completionScreen" class="screen">
+            <div class="completion-content">
+                <h1>Thank You!</h1>
+                <p class="subtitle">Your responses have been recorded successfully.</p>
+                <p>Your contribution to this research on phonological naturalness is greatly appreciated. Your responses will help us better understand how people perceive language patterns across different linguistic systems.</p>
+                <p class="info-text">Responses have been saved and will be analyzed along with other participants' data for this study.</p>
+                <button id="restartBtn" class="btn btn-primary">Start Over</button>
+            </div>
+        </div>
+
+        <!-- Error Screen -->
+        <div id="errorScreen" class="screen">
+            <div class="error-content">
+                <h1>Error</h1>
+                <p id="errorMessage"></p>
+                <button id="errorRetryBtn" class="btn btn-primary">Retry</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="rules.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
