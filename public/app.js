@@ -110,6 +110,7 @@ function generateTrials() {
         let rightRuleIndex = Math.floor(Math.random() * ruleNames.length);
         
         while (rightRuleIndex === leftRuleIndex) {
+            leftRuleIndex = Math.floor(Math.random() * ruleNames.length);
             rightRuleIndex = Math.floor(Math.random() * ruleNames.length);
         }
         

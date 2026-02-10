@@ -135,6 +135,10 @@ function reduceTripleLetters(text) {
     return text.replace(/(.)(\1{2,})/g, '$1$1');
 }
 
+function removeConsonantOnlyWordSpaces(text) {
+    return text.replace(/\b([b-df-hj-np-tv-z]+)\s+/g, '$1');
+}
+
 function applyRule(text, ruleName) {
     const rule = PHONOLOGICAL_RULES[ruleName];
     if (!rule) {
@@ -143,6 +147,7 @@ function applyRule(text, ruleName) {
     }
     let result = rule.apply(text);
     result = reduceTripleLetters(result);
+    result = removeConsonantOnlyWordSpaces(result);
     return result;
 }
 
