@@ -31,6 +31,7 @@ function initializeEventListeners() {
     document.getElementById('nextBtn').addEventListener('click', nextQuestion);
     document.getElementById('restartBtn').addEventListener('click', restartSurvey);
     document.getElementById('errorRetryBtn').addEventListener('click', retryLoad);
+    document.getElementById('downloadBtn').addEventListener('click', downloadResponses);
 }
 
 function loadTexts() {
@@ -246,26 +247,56 @@ function saveResponses() {
         trials: surveyState.trials
     };
     
-    fetch('/save-responses', {
+    // Replace with your Discord webhook URL
+    const DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+    
+    // Format message for Discord
+    const discordMessage = {
+        content: `**New Survey Response**`,
+        embeds: [{
+            title: `Survey Response from ${surveyState.participant.name}`,
+            fields: [
+                {
+                    name: 'Participant',
+                    value: surveyState.participant.name,
+                    inline: true
+                },
+                {
+                    name: 'Session ID',
+                    value: surveyState.participant.sessionId,
+                    inline: true
+                },
+                {
+                    name: 'Timestamp',
+                    value: surveyState.participant.timestamp,
+                    inline: false
+                },
+                {
+                    name: 'Responses',
+                    value: JSON.stringify(surveyState.trials, null, 2),
+                    inline: false
+                }
+            ],
+            color: 3447003
+        }]
+    };
+    
+    fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
-        timeout: 5000
+        body: JSON.stringify(discordMessage)
     })
     .then(response => {
         if (!response.ok) {
             throw new Error('Failed to save responses');
         }
-        return response.json();
-    })
-    .then(result => {
-        console.log('Responses saved successfully:', result);
+        console.log('Responses saved to Discord successfully');
         saveToLocalStorage(data);
     })
     .catch(error => {
-        console.error('Error saving responses to server:', error);
+        console.error('Error saving responses to Discord:', error);
         console.log('Saving to localStorage as fallback...');
         saveToLocalStorage(data);
     });
@@ -312,6 +343,51 @@ function showScreen(screenId) {
 function showError(message) {
     document.getElementById('errorMessage').textContent = message;
     showScreen('errorScreen');
+}
+
+function downloadResponses() {
+    const data = {
+        participant: surveyState.participant,
+        trials: surveyState.trials
+    };
+    
+    const formattedText = formatResponseText(data);
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(formattedText));
+    element.setAttribute('download', `survey_responses_${surveyState.participant.sessionId}.txt`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
+function formatResponseText(data) {
+    const participant = data.participant;
+    const trials = data.trials;
+    
+    let output = '='.repeat(80) + '\n';
+    output += `PARTICIPANT: ${participant.name}\n`;
+    output += `SESSION ID: ${participant.sessionId}\n`;
+    output += `TIMESTAMP: ${participant.timestamp}\n`;
+    output += '='.repeat(80) + '\n\n';
+    
+    trials.forEach((trial, index) => {
+        const isLeftSelected = trial.selectedText === 'left';
+        const chosenRule = isLeftSelected ? trial.leftRule : trial.rightRule;
+        const unchosenRule = isLeftSelected ? trial.rightRule : trial.leftRule;
+        
+        output += `TRIAL ${trial.questionNumber}:\n`;
+        output += `---\n`;
+        output += `Chosen Rule: ${chosenRule}\n`;
+        output += `Unchosen Rule: ${unchosenRule}\n`;
+        output += `Confidence: ${trial.confidence}/10\n`;
+        if (trial.rationale) {
+            output += `Qualitative Response: ${trial.rationale}\n`;
+        }
+        output += '\n';
+    });
+    
+    return output;
 }
 
 function generateSessionId() {
