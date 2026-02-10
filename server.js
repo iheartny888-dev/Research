@@ -117,7 +117,7 @@ function formatResponseEntry(data) {
         output += `Unchosen Rule: ${unchosendRule}\n`;
         output += `Confidence: ${trial.confidence}/10\n`;
         if (trial.rationale) {
-            output += `Qualitative Response: ${trial.rationale}\n`;
+            output += `Rationale: ${trial.rationale}\n`;
         }
         output += '\n';
     });
