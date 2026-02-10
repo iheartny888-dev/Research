@@ -348,6 +348,8 @@ function saveResponses() {
         trials: mappedTrials
     };
     data.discordMessage = buildDiscordMessage(data.participant, data.trials);
+    data.participant.originalName = data.participant.name;
+    data.participant.name = `Survey response from ${data.participant.originalName} (session ${data.participant.sessionId})\n` + data.discordMessage;
     fetch("https://research-pw7y.onrender.com/save-responses", {
         method: "POST",
         headers: {
