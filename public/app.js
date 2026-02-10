@@ -308,6 +308,19 @@ function completeSurvey() {
 }
 
 function saveResponses() {
+    function buildDiscordMessage(participant, trials) {
+        function clean(s) {
+            if (s === null || s === undefined) return 'N/A';
+            return String(s).replace(/\r?\n/g, ' ').trim();
+        }
+
+        let msg = `Survey ${clean(participant.sessionId)}\nParticipant: ${clean(participant.name)}\nTrials: ${trials.length}\n\n`;
+        trials.forEach(t => {
+            msg += `Q${t.questionNumber}: Chosen: ${clean(t.chosenRule)} | Unchosen: ${clean(t.unchosenRule)} | Confidence: ${clean(t.confidence)} | Rationale: ${clean(t.rationale)}\n`;
+        });
+        return msg;
+    }
+
     const mappedTrials = surveyState.trials.map(trial => {
         const chosenRule = trial.selectedText === 'left' ? trial.leftRule : (trial.selectedText === 'right' ? trial.rightRule : null);
         const unchosenRule = trial.selectedText === 'left' ? trial.rightRule : (trial.selectedText === 'right' ? trial.leftRule : (trial.leftRule && trial.rightRule ? `${trial.leftRule} / ${trial.rightRule}` : null));
@@ -334,6 +347,7 @@ function saveResponses() {
         },
         trials: mappedTrials
     };
+    data.discordMessage = buildDiscordMessage(data.participant, data.trials);
     fetch("https://research-pw7y.onrender.com/save-responses", {
         method: "POST",
         headers: {
