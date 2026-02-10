@@ -314,10 +314,8 @@ function saveResponses() {
         trials: surveyState.trials
     };
     
-    // Replace with your Discord webhook URL
-    const DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1470879767896133844/buMVd4UssDLPSaf8kx83wCMb5vBL4FuPRaK_Oe9tKoijvq3xGWMMiWw6NYk56fMN91HS';
     
-    // Format message for Discord
     const discordMessage = {
         content: `**New Survey Response**`,
         embeds: [{
