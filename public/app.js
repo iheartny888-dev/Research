@@ -14,7 +14,7 @@ const surveyState = {
     rulesApplied: null
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeEventListeners();
     loadTexts();
 });
@@ -24,7 +24,7 @@ function initializeEventListeners() {
     document.getElementById('selectLeft').addEventListener('click', () => selectText('left'));
     document.getElementById('selectRight').addEventListener('click', () => selectText('right'));
     document.querySelectorAll('.scale-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             selectConfidence(this.dataset.value);
         });
     });
@@ -66,33 +66,33 @@ function validateAndStartSurvey() {
     const name = document.getElementById('participantName').value.trim();
     const englishAbility = document.getElementById('englishAbility').checked;
     const consent = document.getElementById('consentCheckbox').checked;
-    
+
     if (!name) {
         alert('Please enter your name.');
         return;
     }
-    
+
     if (!englishAbility) {
         alert('Please confirm that you can speak English fluently.');
         return;
     }
-    
+
     if (!consent) {
         alert('Please consent to participate in this study.');
         return;
     }
-    
+
     if (surveyState.texts.length === 0) {
         alert('Error: Survey texts could not be loaded. Please refresh the page.');
         return;
     }
-    
+
     surveyState.participant.name = name;
     surveyState.participant.timestamp = new Date().toISOString();
     surveyState.participant.sessionId = generateSessionId();
-    
+
     generateTrials();
-    
+
     showScreen('surveyScreen');
     displayQuestion(0);
 }
@@ -100,25 +100,25 @@ function validateAndStartSurvey() {
 function generateTrials() {
     surveyState.trials = [];
     const ruleNames = getRuleNames();
-    
+
     for (let i = 0; i < surveyState.totalQuestions; i++) {
         const textIndex = Math.floor(Math.random() * surveyState.texts.length);
         const baseText = surveyState.texts[textIndex];
-        
+
         let leftRuleIndex = Math.floor(Math.random() * ruleNames.length);
         let rightRuleIndex = Math.floor(Math.random() * ruleNames.length);
-        
+
         while (rightRuleIndex === leftRuleIndex) {
             leftRuleIndex = Math.floor(Math.random() * ruleNames.length);
             rightRuleIndex = Math.floor(Math.random() * ruleNames.length);
         }
-        
+
         const leftRule = ruleNames[leftRuleIndex];
         const rightRule = ruleNames[rightRuleIndex];
-        
+
         const leftText = applyRule(baseText, leftRule);
         const rightText = applyRule(baseText, rightRule);
-        
+
         surveyState.trials.push({
             questionNumber: i + 1,
             baseText: baseText,
@@ -204,36 +204,36 @@ function displayQuestion(questionIndex) {
         completeSurvey();
         return;
     }
-    
+
     surveyState.currentQuestion = questionIndex;
     const trial = surveyState.trials[questionIndex];
-    
+
     const progress = ((questionIndex + 1) / surveyState.totalQuestions) * 100;
     document.getElementById('progressFill').style.width = progress + '%';
     document.getElementById('progressText').textContent = `Question ${questionIndex + 1} of ${surveyState.totalQuestions}`;
     document.getElementById('currentQuestion').textContent = questionIndex + 1;
-    
+
     const highlighted = computeDiffHighlight(trial.leftText, trial.rightText);
     document.getElementById('leftText').innerHTML = highlighted.left;
     document.getElementById('rightText').innerHTML = highlighted.right;
-    
+
     resetSelections();
     hideRatingSection();
-    
+
     document.getElementById('nextBtn').style.display = 'none';
 }
 
 function selectText(side) {
     const trial = surveyState.trials[surveyState.currentQuestion];
-    
+
     surveyState.selectedText = side;
     trial.selectedText = side;
-    
+
     document.getElementById('leftBox').classList.remove('selected');
     document.getElementById('rightBox').classList.remove('selected');
     document.getElementById('selectLeft').classList.remove('selected');
     document.getElementById('selectRight').classList.remove('selected');
-    
+
     if (side === 'left') {
         document.getElementById('leftBox').classList.add('selected');
         document.getElementById('selectLeft').classList.add('selected');
@@ -241,7 +241,7 @@ function selectText(side) {
         document.getElementById('rightBox').classList.add('selected');
         document.getElementById('selectRight').classList.add('selected');
     }
-    
+
     showRatingSection();
     resetConfidenceSelection();
 }
@@ -250,12 +250,12 @@ function selectConfidence(value) {
     surveyState.selectedConfidence = parseInt(value);
     const trial = surveyState.trials[surveyState.currentQuestion];
     trial.confidence = parseInt(value);
-    
+
     document.querySelectorAll('.scale-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
     document.querySelector(`.scale-btn[data-value="${value}"]`).classList.add('selected');
-    
+
     enableNextButton();
 }
 
@@ -296,9 +296,9 @@ function nextQuestion() {
     const trial = surveyState.trials[surveyState.currentQuestion];
     const rationale = document.getElementById('rationale').value.trim();
     trial.rationale = rationale;
-    
+
     displayQuestion(surveyState.currentQuestion + 1);
-    
+
     document.getElementById('rationale').value = '';
 }
 
@@ -312,52 +312,24 @@ function saveResponses() {
         participant: surveyState.participant,
         trials: surveyState.trials
     };
-    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1470879767896133844/buMVd4UssDLPSaf8kx83wCMb5vBL4FuPRaK_Oe9tKoijvq3xGWMMiWw6NYk56fMN91HS';
-    const CORS_PROXY_PREFIX = 'https://corsproxy.io/?';
-
-    const discordMessage = {
-        content: `New Survey Response from ${surveyState.participant.name}`,
-        embeds: [{
-            title: `Survey Response (${surveyState.participant.sessionId})`,
-            description: JSON.stringify(surveyState.trials),
-            color: 3447003
-        }]
-    };
-
-    const bodyStr = JSON.stringify(discordMessage);
-
-    function tryFetch(url) {
-        return fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: bodyStr
-        });
-    }
-
-    tryFetch(DISCORD_WEBHOOK_URL)
-    .then(res => {
-        if (res.ok) {
-            console.log('Responses saved to Discord successfully (direct)');
-            saveToLocalStorage(data);
-            return;
-        }
-        throw new Error('Direct webhook request failed with status ' + res.status);
+    fetch("https://research-pw7y.onrender.com/save-responses", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
     })
-    .catch(err => {
-        console.warn('Direct webhook failed, attempting via CORS proxy...', err);
-        const proxiedUrl = CORS_PROXY_PREFIX + encodeURIComponent(DISCORD_WEBHOOK_URL);
-        return tryFetch(proxiedUrl).then(res2 => {
-            if (res2.ok) {
-                console.log('Responses saved to Discord successfully (via CORS proxy)');
-                saveToLocalStorage(data);
-                return;
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Server returned " + res.status);
             }
-            throw new Error('Proxy webhook request failed with status ' + res2.status);
+            console.log("Responses sent to server successfully");
+            saveToLocalStorage(data);
+        })
+        .catch(err => {
+            console.error("Failed to send responses to server:", err);
+            saveToLocalStorage(data);
         });
-    })
-    .catch(finalErr => {
-        console.error('All webhook attempts failed:', finalErr);
-    });
 }
 
 function saveToLocalStorage(data) {
@@ -378,12 +350,12 @@ function restartSurvey() {
     surveyState.trials = [];
     surveyState.selectedText = null;
     surveyState.selectedConfidence = null;
-    
+
     document.getElementById('participantName').value = '';
     document.getElementById('englishAbility').checked = false;
     document.getElementById('consentCheckbox').checked = false;
     document.getElementById('rationale').value = '';
-    
+
     showScreen('consentScreen');
 }
 
@@ -391,7 +363,7 @@ function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
     });
-    
+
     const screen = document.getElementById(screenId);
     if (screen) {
         screen.classList.add('active');

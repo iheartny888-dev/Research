@@ -2,8 +2,10 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -21,8 +23,52 @@ app.post('/save-responses', (req, res) => {
         
         const responseEntry = formatResponseEntry(data);
         fs.appendFileSync(responsesFile, responseEntry + '\n\n');
-        
+
         console.log(`Responses saved for participant: ${data.participant.name}`);
+
+        const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || '';
+        if (DISCORD_WEBHOOK_URL) {
+            try {
+                const https = require('https');
+                const url = new URL(DISCORD_WEBHOOK_URL);
+                const payload = JSON.stringify({
+                    content: `Survey response from ${data.participant.name} (session ${data.participant.sessionId})`,
+                    embeds: [{
+                        title: `Survey ${data.participant.sessionId}`,
+                        description: `Participant: ${data.participant.name}\nTrials: ${data.trials.length}`,
+                        color: 3447003
+                    }]
+                });
+
+                const options = {
+                    hostname: url.hostname,
+                    path: url.pathname + (url.search || ''),
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Content-Length': Buffer.byteLength(payload)
+                    }
+                };
+
+                const req2 = https.request(options, (resp) => {
+                    let body = '';
+                    resp.on('data', (chunk) => body += chunk);
+                    resp.on('end', () => {
+                        console.log('Discord webhook forwarded, status:', resp.statusCode);
+                    });
+                });
+                req2.on('error', (e) => {
+                    console.error('Error forwarding to Discord webhook:', e.message);
+                });
+                req2.write(payload);
+                req2.end();
+            } catch (e) {
+                console.error('Failed to forward to Discord webhook:', e.message);
+            }
+        } else {
+            console.log('No DISCORD_WEBHOOK_URL configured; skipping webhook forward.');
+        }
+
         res.json({ 
             success: true, 
             message: 'Responses saved successfully',
