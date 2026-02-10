@@ -135,6 +135,71 @@ function generateTrials() {
     }
 }
 
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function computeDiffHighlight(a, b) {
+    if (a === b) {
+        return { left: escapeHtml(a), right: escapeHtml(b) };
+    }
+
+    const m = a.length;
+    const n = b.length;
+    const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (a[i - 1] === b[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    const matchedA = new Array(m).fill(false);
+    const matchedB = new Array(n).fill(false);
+    let i = m, j = n;
+    while (i > 0 && j > 0) {
+        if (a[i - 1] === b[j - 1]) {
+            matchedA[i - 1] = true;
+            matchedB[j - 1] = true;
+            i--; j--;
+        } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+            i--;
+        } else {
+            j--;
+        }
+    }
+
+    function escChar(ch) {
+        if (ch === ' ') return '&nbsp;';
+        return escapeHtml(ch);
+    }
+
+    let leftHtml = '';
+    for (let k = 0; k < m; k++) {
+        const ch = a[k];
+        if (matchedA[k]) leftHtml += escChar(ch);
+        else leftHtml += '<span style="background-color:lightblue">' + escChar(ch) + '</span>';
+    }
+
+    let rightHtml = '';
+    for (let k = 0; k < n; k++) {
+        const ch = b[k];
+        if (matchedB[k]) rightHtml += escChar(ch);
+        else rightHtml += '<span style="background-color:lightblue">' + escChar(ch) + '</span>';
+    }
+
+    return { left: leftHtml, right: rightHtml };
+}
+
 function displayQuestion(questionIndex) {
     if (questionIndex >= surveyState.totalQuestions) {
         completeSurvey();
@@ -149,8 +214,9 @@ function displayQuestion(questionIndex) {
     document.getElementById('progressText').textContent = `Question ${questionIndex + 1} of ${surveyState.totalQuestions}`;
     document.getElementById('currentQuestion').textContent = questionIndex + 1;
     
-    document.getElementById('leftText').textContent = trial.leftText;
-    document.getElementById('rightText').textContent = trial.rightText;
+    const highlighted = computeDiffHighlight(trial.leftText, trial.rightText);
+    document.getElementById('leftText').innerHTML = highlighted.left;
+    document.getElementById('rightText').innerHTML = highlighted.right;
     
     resetSelections();
     hideRatingSection();
