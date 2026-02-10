@@ -1,20 +1,20 @@
 const PHONOLOGICAL_RULES = {
     lenition: {
         name: "Lenition",
-        description: "p → f, b → w, t → th, d → z, k → kh, g → gh / VCV, VC#",
+        description: "p → f, b → u, t → s, d → z, k → kh, g → gh / VCV, VC#",
         apply: function(text) {
             let result = text;
             
             result = result.replace(/([aeiou])p([aeiou])/gi, '$1f$2');
-            result = result.replace(/([aeiou])b([aeiou])/gi, '$1w$2');
-            result = result.replace(/([aeiou])t([aeiou])/gi, '$1th$2');
+            result = result.replace(/([aeiou])b([aeiou])/gi, '$1u$2');
+            result = result.replace(/([aeiou])t([aeiou])/gi, '$1s$2');
             result = result.replace(/([aeiou])d([aeiou])/gi, '$1z$2');
             result = result.replace(/([aeiou])k([aeiou])/gi, '$1kh$2');
             result = result.replace(/([aeiou])g([aeiou])/gi, '$1gh$2');
             
             result = result.replace(/([aeiou])p(\s|$)/gi, '$1f$2');
-            result = result.replace(/([aeiou])b(\s|$)/gi, '$1w$2');
-            result = result.replace(/([aeiou])t(\s|$)/gi, '$1th$2');
+            result = result.replace(/([aeiou])b(\s|$)/gi, '$1u$2');
+            result = result.replace(/([aeiou])t(\s|$)/gi, '$1s$2');
             result = result.replace(/([aeiou])d(\s|$)/gi, '$1z$2');
             result = result.replace(/([aeiou])k(\s|$)/gi, '$1kh$2');
             result = result.replace(/([aeiou])g(\s|$)/gi, '$1gh$2');
@@ -131,13 +131,19 @@ function getRuleByName(name) {
     return PHONOLOGICAL_RULES[name];
 }
 
+function reduceTripleLetters(text) {
+    return text.replace(/(.)(\1{2,})/g, '$1$1');
+}
+
 function applyRule(text, ruleName) {
     const rule = PHONOLOGICAL_RULES[ruleName];
     if (!rule) {
         console.error(`Rule "${ruleName}" not found`);
         return text;
     }
-    return rule.apply(text);
+    let result = rule.apply(text);
+    result = reduceTripleLetters(result);
+    return result;
 }
 
 function getRuleNames() {
