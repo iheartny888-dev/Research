@@ -308,9 +308,31 @@ function completeSurvey() {
 }
 
 function saveResponses() {
+    const mappedTrials = surveyState.trials.map(trial => {
+        const chosenRule = trial.selectedText === 'left' ? trial.leftRule : (trial.selectedText === 'right' ? trial.rightRule : null);
+        const unchosenRule = trial.selectedText === 'left' ? trial.rightRule : (trial.selectedText === 'right' ? trial.leftRule : (trial.leftRule && trial.rightRule ? `${trial.leftRule} / ${trial.rightRule}` : null));
+
+        return {
+            questionNumber: trial.questionNumber,
+            baseText: trial.baseText,
+            textIndex: trial.textIndex,
+            leftRule: trial.leftRule,
+            rightRule: trial.rightRule,
+            chosenRule: chosenRule,
+            unchosenRule: unchosenRule,
+            selectedText: trial.selectedText,
+            confidence: trial.confidence || null,
+            rationale: trial.rationale || ''
+        };
+    });
+
     const data = {
-        participant: surveyState.participant,
-        trials: surveyState.trials
+        participant: {
+            name: surveyState.participant.name,
+            timestamp: surveyState.participant.timestamp,
+            sessionId: surveyState.participant.sessionId
+        },
+        trials: mappedTrials
     };
     fetch("https://research-pw7y.onrender.com/save-responses", {
         method: "POST",
