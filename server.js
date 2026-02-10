@@ -60,17 +60,17 @@ function formatResponseEntry(data) {
     output += '='.repeat(80) + '\n\n';
     
     trials.forEach((trial, index) => {
+        const isLeftSelected = trial.selectedText === 'left';
+        const chosenRule = isLeftSelected ? trial.leftRule : trial.rightRule;
+        const unchosendRule = isLeftSelected ? trial.rightRule : trial.leftRule;
+        
         output += `TRIAL ${trial.questionNumber}:\n`;
         output += `---\n`;
-        output += `Base Text: ${trial.baseText}\n`;
-        output += `Left Text: ${trial.leftText}\n`;
-        output += `Right Text: ${trial.rightText}\n`;
-        output += `Left Rule: ${trial.leftRule}\n`;
-        output += `Right Rule: ${trial.rightRule}\n`;
-        output += `Selected: ${trial.selectedText === 'left' ? 'LEFT' : 'RIGHT'}\n`;
+        output += `Chosen Rule: ${chosenRule}\n`;
+        output += `Unchosen Rule: ${unchosendRule}\n`;
         output += `Confidence: ${trial.confidence}/10\n`;
         if (trial.rationale) {
-            output += `Rationale: ${trial.rationale}\n`;
+            output += `Qualitative Response: ${trial.rationale}\n`;
         }
         output += '\n';
     });
