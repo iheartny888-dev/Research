@@ -31,7 +31,6 @@ function initializeEventListeners() {
     document.getElementById('nextBtn').addEventListener('click', nextQuestion);
     document.getElementById('restartBtn').addEventListener('click', restartSurvey);
     document.getElementById('errorRetryBtn').addEventListener('click', retryLoad);
-    document.getElementById('downloadBtn').addEventListener('click', downloadResponses);
 }
 
 function loadTexts() {
@@ -313,57 +312,51 @@ function saveResponses() {
         participant: surveyState.participant,
         trials: surveyState.trials
     };
-    
     const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1470879767896133844/buMVd4UssDLPSaf8kx83wCMb5vBL4FuPRaK_Oe9tKoijvq3xGWMMiWw6NYk56fMN91HS';
-    
+    const CORS_PROXY_PREFIX = 'https://corsproxy.io/?';
+
     const discordMessage = {
-        content: `**New Survey Response**`,
+        content: `New Survey Response from ${surveyState.participant.name}`,
         embeds: [{
-            title: `Survey Response from ${surveyState.participant.name}`,
-            fields: [
-                {
-                    name: 'Participant',
-                    value: surveyState.participant.name,
-                    inline: true
-                },
-                {
-                    name: 'Session ID',
-                    value: surveyState.participant.sessionId,
-                    inline: true
-                },
-                {
-                    name: 'Timestamp',
-                    value: surveyState.participant.timestamp,
-                    inline: false
-                },
-                {
-                    name: 'Responses',
-                    value: JSON.stringify(surveyState.trials, null, 2),
-                    inline: false
-                }
-            ],
+            title: `Survey Response (${surveyState.participant.sessionId})`,
+            description: JSON.stringify(surveyState.trials),
             color: 3447003
         }]
     };
-    
-    fetch(DISCORD_WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(discordMessage)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to save responses');
+
+    const bodyStr = JSON.stringify(discordMessage);
+
+    function tryFetch(url) {
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: bodyStr
+        });
+    }
+
+    tryFetch(DISCORD_WEBHOOK_URL)
+    .then(res => {
+        if (res.ok) {
+            console.log('Responses saved to Discord successfully (direct)');
+            saveToLocalStorage(data);
+            return;
         }
-        console.log('Responses saved to Discord successfully');
-        saveToLocalStorage(data);
+        throw new Error('Direct webhook request failed with status ' + res.status);
     })
-    .catch(error => {
-        console.error('Error saving responses to Discord:', error);
-        console.log('Saving to localStorage as fallback...');
-        saveToLocalStorage(data);
+    .catch(err => {
+        console.warn('Direct webhook failed, attempting via CORS proxy...', err);
+        const proxiedUrl = CORS_PROXY_PREFIX + encodeURIComponent(DISCORD_WEBHOOK_URL);
+        return tryFetch(proxiedUrl).then(res2 => {
+            if (res2.ok) {
+                console.log('Responses saved to Discord successfully (via CORS proxy)');
+                saveToLocalStorage(data);
+                return;
+            }
+            throw new Error('Proxy webhook request failed with status ' + res2.status);
+        });
+    })
+    .catch(finalErr => {
+        console.error('All webhook attempts failed:', finalErr);
     });
 }
 
@@ -410,49 +403,6 @@ function showError(message) {
     showScreen('errorScreen');
 }
 
-function downloadResponses() {
-    const data = {
-        participant: surveyState.participant,
-        trials: surveyState.trials
-    };
-    
-    const formattedText = formatResponseText(data);
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(formattedText));
-    element.setAttribute('download', `survey_responses_${surveyState.participant.sessionId}.txt`);
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-}
-
-function formatResponseText(data) {
-    const participant = data.participant;
-    const trials = data.trials;
-    
-    let output = '='.repeat(80) + '\n';
-    output += `PARTICIPANT: ${participant.name}\n`;
-    output += `SESSION ID: ${participant.sessionId}\n`;
-    output += `TIMESTAMP: ${participant.timestamp}\n`;
-    output += '='.repeat(80) + '\n\n';
-    
-    trials.forEach((trial, index) => {
-        const isLeftSelected = trial.selectedText === 'left';
-        const chosenRule = isLeftSelected ? trial.leftRule : trial.rightRule;
-        const unchosenRule = isLeftSelected ? trial.rightRule : trial.leftRule;
-        
-        output += `TRIAL ${trial.questionNumber}:\n`;
-        output += `---\n`;
-        output += `Chosen Rule: ${chosenRule}\n`;
-        output += `Unchosen Rule: ${unchosenRule}\n`;
-        output += `Confidence: ${trial.confidence}/10\n`;
-        if (trial.rationale) {
-            output += `Qualitative Response: ${trial.rationale}\n`;
-        }
-        output += '\n';
-    });
-    
-    return output;
 }
 
 function generateSessionId() {
