@@ -1,5 +1,5 @@
 {
-  "name": "phonological-survey",
+  "name": "survey",
   "version": "1.0.0",
   "description": "Customized survey platform for phonological naturalness research",
   "main": "server.js",
@@ -7,12 +7,6 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": [
-    "survey",
-    "phonology",
-    "research",
-    "linguistics"
-  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
