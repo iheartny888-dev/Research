@@ -105,19 +105,20 @@ function generateTrials() {
         const textIndex = Math.floor(Math.random() * surveyState.texts.length);
         const baseText = surveyState.texts[textIndex];
 
-        let leftRuleIndex = Math.floor(Math.random() * ruleNames.length);
-        let rightRuleIndex = Math.floor(Math.random() * ruleNames.length);
+        let leftRuleIndex, rightRuleIndex, leftText, rightText;
 
-        while (rightRuleIndex === leftRuleIndex) {
+        do {
             leftRuleIndex = Math.floor(Math.random() * ruleNames.length);
             rightRuleIndex = Math.floor(Math.random() * ruleNames.length);
-        }
 
-        const leftRule = ruleNames[leftRuleIndex];
-        const rightRule = ruleNames[rightRuleIndex];
+            while (rightRuleIndex === leftRuleIndex) {
+                rightRuleIndex = Math.floor(Math.random() * ruleNames.length);
+            }
 
-        const leftText = applyRule(baseText, leftRule);
-        const rightText = applyRule(baseText, rightRule);
+            leftText = applyRule(baseText, ruleNames[leftRuleIndex]);
+            rightText = applyRule(baseText, ruleNames[rightRuleIndex]);
+
+        } while (leftText === rightText);
 
         surveyState.trials.push({
             questionNumber: i + 1,
@@ -125,8 +126,8 @@ function generateTrials() {
             textIndex: textIndex,
             leftText: leftText,
             rightText: rightText,
-            leftRule: leftRule,
-            rightRule: rightRule,
+            leftRule: ruleNames[leftRuleIndex],
+            rightRule: ruleNames[rightRuleIndex],
             selectedText: null,
             confidence: null,
             rationale: ''
