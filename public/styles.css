@@ -209,13 +209,10 @@ body {
 }
 
 .text-content {
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-    word-break: normal;
     white-space: normal;
-    min-width: 0;
-    flex-shrink: 1;
-    hyphens: auto;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: none;
 }
 
 .separator {
