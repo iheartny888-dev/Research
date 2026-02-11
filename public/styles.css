@@ -216,6 +216,7 @@ body {
     word-break: normal;
     overflow-wrap: break-word;
     hyphens: none;
+    width: 100%;
 }
 
 .separator {
