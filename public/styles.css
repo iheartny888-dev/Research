@@ -195,6 +195,9 @@ body {
     text-align: center;
     flex-wrap: wrap;
     min-width: 0;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 .text-box:hover {
