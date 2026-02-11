@@ -210,7 +210,7 @@ body {
 
 .text-content {
     word-wrap: break-word;
-    overflow-wrap: break-word;
+    overflow-wrap: normal;
     word-break: normal;
     white-space: normal;
     min-width: 0;
