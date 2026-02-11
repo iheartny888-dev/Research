@@ -215,7 +215,7 @@ body {
     white-space: normal;
     word-break: normal;
     overflow-wrap: break-word;
-    hyphens: none;
+    hyphens: auto;
     width: 100%;
 }
 
