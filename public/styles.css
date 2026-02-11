@@ -187,16 +187,17 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     min-height: 150px;
+    display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
     line-height: 1.8;
     text-align: center;
+    flex-wrap: wrap;
     min-width: 0;
-    text-align: center;
     white-space: normal;
     word-break: normal;
-    overflow-wrap: normal;
+    overflow-wrap: break-word;
 }
 
 .text-box:hover {
