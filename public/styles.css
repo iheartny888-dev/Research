@@ -210,7 +210,9 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
     word-break: normal;
+    white-space: normal;
     min-width: 0;
+    flex-shrink: 1;
 }
 
 .separator {
