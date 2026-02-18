@@ -5,7 +5,7 @@ const surveyState = {
         sessionId: ''
     },
     currentQuestion: 0,
-    totalQuestions: 25,
+    totalQuestions: 10,
     responses: [],
     texts: [],
     trials: [],
