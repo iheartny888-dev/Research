@@ -309,6 +309,7 @@ function completeSurvey() {
 }
 
 function saveResponses() {
+
     function buildDiscordMessage(participant, trials) {
         function clean(s) {
             if (s === null || s === undefined) return 'N/A';
@@ -317,15 +318,24 @@ function saveResponses() {
 
         let msg = `Survey response from ${clean(participant.name)} (session ${clean(participant.sessionId)})\n`;
         msg += `Survey ${clean(participant.sessionId)}\nParticipant: ${clean(participant.name)}\nTrials: ${trials.length}\n\n`;
+
         trials.forEach(t => {
             msg += `Q${t.questionNumber}: Chosen: ${clean(t.chosenRule)} | Unchosen: ${clean(t.unchosenRule)} | Confidence: ${clean(t.confidence)} | Rationale: ${clean(t.rationale)}\n`;
         });
+
         return msg;
     }
 
     const mappedTrials = surveyState.trials.map(trial => {
-        const chosenRule = trial.selectedText === 'left' ? trial.leftRule : (trial.selectedText === 'right' ? trial.rightRule : null);
-        const unchosenRule = trial.selectedText === 'left' ? trial.rightRule : (trial.selectedText === 'right' ? trial.leftRule : (trial.leftRule && trial.rightRule ? `${trial.leftRule} / ${trial.rightRule}` : null));
+        const chosenRule =
+            trial.selectedText === 'left' ? trial.leftRule :
+            trial.selectedText === 'right' ? trial.rightRule :
+            null;
+
+        const unchosenRule =
+            trial.selectedText === 'left' ? trial.rightRule :
+            trial.selectedText === 'right' ? trial.leftRule :
+            (trial.leftRule && trial.rightRule ? `${trial.leftRule} / ${trial.rightRule}` : null);
 
         return {
             questionNumber: trial.questionNumber,
@@ -333,8 +343,8 @@ function saveResponses() {
             textIndex: trial.textIndex,
             leftRule: trial.leftRule,
             rightRule: trial.rightRule,
-            chosenRule: chosenRule,
-            unchosenRule: unchosenRule,
+            chosenRule,
+            unchosenRule,
             selectedText: trial.selectedText,
             confidence: trial.confidence || null,
             rationale: trial.rationale || ''
@@ -349,8 +359,14 @@ function saveResponses() {
         },
         trials: mappedTrials
     };
+
     data.discordMessage = buildDiscordMessage(data.participant, data.trials);
     data.content = data.discordMessage;
+
+    // ✅ SAVE LOCALLY FIRST (ALWAYS)
+    saveToLocalStorage(data);
+
+    // ✅ THEN TRY TO SEND TO SERVER
     fetch("https://research-pw7y.onrender.com/save-responses", {
         method: "POST",
         headers: {
@@ -358,17 +374,16 @@ function saveResponses() {
         },
         body: JSON.stringify(data)
     })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("Server returned " + res.status);
-            }
-            console.log("Responses sent to server successfully");
-            saveToLocalStorage(data);
-        })
-        .catch(err => {
-            console.error("Failed to send responses to server:", err);
-            saveToLocalStorage(data);
-        });
+    .then(res => {
+        if (!res.ok) {
+            throw new Error("Server returned " + res.status);
+        }
+        console.log("Responses sent to server successfully");
+    })
+    .catch(err => {
+        console.error("Failed to send responses to server:", err);
+        console.warn("Data safely stored in localStorage.");
+    });
 }
 
 function saveToLocalStorage(data) {
