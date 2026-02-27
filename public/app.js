@@ -366,24 +366,23 @@ function saveResponses() {
     // ✅ SAVE LOCALLY FIRST (ALWAYS)
     saveToLocalStorage(data);
 
-    // ✅ THEN TRY TO SEND TO SERVER
-    fetch("https://research-pw7y.onrender.com/save-responses", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error("Server returned " + res.status);
-        }
-        console.log("Responses sent to server successfully");
-    })
-    .catch(err => {
-        console.error("Failed to send responses to server:", err);
-        console.warn("Data safely stored in localStorage.");
-    });
+    // ✅ SAVE LOCALLY FIRST (ALWAYS)
+saveToLocalStorage(data);
+
+// ✅ THEN TRY TO SEND TO SERVER (with queue-safe approach)
+fetch("https://research-pw7y.onrender.com/save-responses", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+})
+.then(res => {
+    if (!res.ok) throw new Error("Server returned " + res.status);
+    console.log("Responses sent to server successfully");
+})
+.catch(err => {
+    console.error("Failed to send responses to server:", err);
+    console.warn("Data safely stored in localStorage.");
+});
 }
 
 function saveToLocalStorage(data) {
