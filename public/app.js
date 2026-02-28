@@ -328,6 +328,7 @@ function nextQuestion() {
 
 function completeSurvey() {
     saveResponses();
+    restoreSavedResponses() 
     showScreen('completionScreen');
 }
 
