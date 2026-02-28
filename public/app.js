@@ -395,6 +395,7 @@ function saveResponses() {
 }
 
 function saveToLocalStorage(data) {
+    restoreSavedResponses() 
     try {
         const existingResponses = JSON.parse(localStorage.getItem('surveyResponses')) || [];
         existingResponses.push(data);
