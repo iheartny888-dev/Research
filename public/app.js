@@ -1,10 +1,5 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
   apiKey: "AIzaSyBjm3e-fT8NpbE56wilnp-n4DJxnVvlWRc",
   authDomain: "research-307c4.firebaseapp.com",
@@ -15,10 +10,9 @@ const firebaseConfig = {
   appId: "1:1082731975081:web:96ad33d8b7964e0bb8b4b8"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 function saveToFirebase(data) {
-    const db = getDatabase(app);
     const newRef = push(ref(db, 'surveyResponses'));
     set(newRef, data)
         .then(() => console.log('Response saved to Firebase'))
