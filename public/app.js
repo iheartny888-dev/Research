@@ -10,11 +10,12 @@ const firebaseConfig = {
   appId: "1:1082731975081:web:96ad33d8b7964e0bb8b4b8"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 function saveToFirebase(data) {
-    const newRef = push(ref(db, 'surveyResponses'));
-    set(newRef, data)
+    const newRef = db.ref('surveyResponses').push();
+    newRef.set(data)
         .then(() => console.log('Response saved to Firebase'))
         .catch(e => console.error('Firebase save error:', e));
 }
