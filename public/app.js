@@ -393,10 +393,10 @@ function saveResponses() {
             console.error("Failed to send responses to server:", err);
             saveToLocalStorage(data);
         });
+        restoreSavedResponses() 
 }
 
 function saveToLocalStorage(data) {
-    restoreSavedResponses() 
     try {
         const existingResponses = JSON.parse(localStorage.getItem('surveyResponses')) || [];
         existingResponses.push(data);
@@ -406,6 +406,7 @@ function saveToLocalStorage(data) {
     } catch (error) {
         console.error('Error saving to localStorage:', error);
     }
+    restoreSavedResponses() 
 }
 
 function restartSurvey() {
